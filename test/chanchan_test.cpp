@@ -2,16 +2,12 @@
 
 #include <assert.h>
 
-#include <condition_variable>
 #include <iostream>
-#include <memory>
-#include <mutex>
-#include <queue>
-#include <string>
-#include <tuple>
-#include <utility>
+#include <optional>
 
 namespace chan = chanchan;
+
+using std::optional;
 
 int main(void) {
 	{
@@ -19,8 +15,8 @@ int main(void) {
 
 		tx.send(42);
 
-		int x = rx.recv();
-		std::cout << "got: " << x << "\n";
+		int x = rx.recv().value();
+		std::cout << "x=" << x << "\n";
 		assert(x == 42);
 	}
 
@@ -31,8 +27,8 @@ int main(void) {
 		// receiver will block forever
 		tx.~sender();
 
-		int x = rx.recv();
-		std::cout << "got: " << x << "\n";
-		assert(x == -1);
+		auto x = rx.recv();
+		std::cout << "x=" << (x.has_value() ? "something" : "nothing") << "\n";
+		assert (!x.has_value());
 	}
 }

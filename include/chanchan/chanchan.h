@@ -3,6 +3,7 @@
 #include <condition_variable>
 #include <memory>
 #include <mutex>
+#include <optional>
 #include <queue>
 #include <tuple>
 
@@ -12,6 +13,7 @@ using std::condition_variable;
 using std::make_shared;
 using std::make_tuple;
 using std::mutex;
+using std::optional;
 using std::queue;
 using std::shared_ptr;
 using std::tuple;
@@ -43,10 +45,9 @@ template <typename T>
 struct receiver final {
 	shared_ptr<mutual<T>> _mutual;
 
-	// TODO: change to optional
-	constexpr T recv() {
+	constexpr optional<T> recv() {
 		if (_mutual.use_count() == 1)
-			return -1;
+			return {};
 
 		auto& [m, q, cv] = *_mutual;
 		auto lock = unique_lock(m);
