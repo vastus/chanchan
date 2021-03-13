@@ -1,0 +1,5 @@
+clang++
+-std=c++2a
+-fimplicit-modules
+-fimplicit-module-maps
+-Iinclude
